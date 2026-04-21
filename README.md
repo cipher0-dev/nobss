@@ -24,7 +24,7 @@ make disass_text
 ```
 
 It just exits with 20 as the status code. The instruction payload is 16 bytes
-and the entire ELF binary is 136 bytes.
+and the entire ELF binary is 122 bytes.
 
 I wrote this as an experiment to learn more about the ELF format and to discover
 what the least amount of data I need to provide Linux is until it starts
