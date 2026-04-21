@@ -1,26 +1,37 @@
 .PHONY: all clean disass_text
 
-C_BINS := $(patsubst %.c,build/%,$(wildcard *.c))
-S_BINS := $(patsubst %.s,build/%,$(wildcard *.s))
+CC      ?= zig cc
+CFLAGS  ?= -std=c23
+SFLAGS  ?= -nostdlib
+OBJCOPY ?= objcopy
+OBJDUMP ?= objdump
 
-all: $(C_BINS) $(S_BINS) build/min_prog.text build/out
+BUILD := build
+
+C_SRCS := $(wildcard *.c)
+S_SRCS := $(wildcard *.s)
+
+C_BINS := $(patsubst %.c,$(BUILD)/%,$(C_SRCS))
+S_BINS := $(patsubst %.s,$(BUILD)/%,$(S_SRCS))
+
+all: $(C_BINS) $(S_BINS) $(BUILD)/min_prog.text $(BUILD)/out
 
 clean:
-	-rm -rf build 2>/dev/null
+	rm -rf $(BUILD)
 
-build/%: %.c
-	mkdir -p $(@D)
-	zig cc -std=c23 -g -Og -o $@ $^
+$(BUILD)/%: %.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -o $@ $<
 
-build/%: %.s
-	mkdir -p $(@D)
-	zig cc -nostdlib -o $@ $^
+$(BUILD)/%: %.s
+	@mkdir -p $(@D)
+	$(CC) $(SFLAGS) -o $@ $<
 
-build/min_prog.text: build/min_prog
-	objcopy -O binary --only-section=.text $^ $@
+$(BUILD)/min_prog.text: $(BUILD)/min_prog
+	$(OBJCOPY) -O binary --only-section=.text $< $@
 
-build/out: build/write_elf build/min_prog.text
-	build/write_elf $@
+$(BUILD)/out: $(BUILD)/write_elf $(BUILD)/min_prog.text
+	$< $@
 
-disass_text: build/min_prog.text
-	objdump -D -b binary -m i386:x86-64 $^
+disass_text: $(BUILD)/min_prog.text
+	$(OBJDUMP) -D -b binary -m i386:x86-64 $<
