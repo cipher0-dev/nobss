@@ -1,7 +1,8 @@
 # No BS(S)!
 
-This repo builds a minimal ELF binary for amd64 Linux with no stack, no dynamic
-linking, no data/rodata, no BSS, and no BS! To build:
+This repo builds a minimal ELF binary for amd64 Linux with no symbols, no
+dwarfs, no dynamic linking, no stack, no data/rodata, no BSS, and no BS! To
+build:
 
 ```
 make
