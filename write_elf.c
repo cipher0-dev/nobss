@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 void exit_usage(char *cmd) {
-  fprintf(stderr, "usage: %s out_path\n", cmd);
+  fprintf(stderr, "usage: %s <out_path>\n", cmd);
   exit(EXIT_FAILURE);
 }
 
